@@ -78,4 +78,87 @@ public class BST<K extends Comparable<K>, V> {
 
         return node;
     }
+    private Node min(Node node) {
+        if (node.left == null)
+            return node;
+        return min(node.left);
+    }
+
+    private Node deleteMin(Node node) {
+        if (node.left == null)
+            return node.right;
+        node.left = deleteMin(node.left);
+        return node;
+    }
+    public Iterable<KeyValue<K, V>> iterator() {
+        List<KeyValue<K, V>> keyValues = new ArrayList<>();
+        inorderTraversal(root, keyValues);
+        return keyValues;
+    }
+    private void inorderTraversal(Node node, List<KeyValue<K, V>> keyValues) {
+        if (node == null)
+            return;
+
+        Stack<Node> stack = new Stack<>();
+        Node current = node;
+
+        while (current != null || !stack.isEmpty()) {
+            while (current != null) {
+                stack.push(current);
+                current = current.left;
+            }
+
+            current = stack.pop();
+            keyValues.add(new KeyValue<>(current.key, current.val));
+            current = current.right;
+        }
+    }
+    public static class KeyValue<K, V> {
+        private K key;
+        private V value;
+
+        public KeyValue(K key, V value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public K getKey() {
+            return key;
+        }
+
+        public V getValue() {
+            return value;
+        }
+    }
+    public int size() {
+        return size(root);
+    }
+
+    private int size(Node node) {
+        if (node == null) {
+            return 0;
+        }
+        return 1 + size(node.left) + size(node.right);
+    }
+    private int sizeH(Node node) {
+        if (node == null) {
+            return 0;
+        }
+        return 1 + sizeH(node.left);
+    }
+
+    public int height(){
+        return height(root);
+    }
+    private int height(Node node){
+        if (node == null){
+            return 0;
+        }
+        if(size(node.left) > size(node.right)){
+            return (sizeH(node.left));
+        }
+        else{
+            return (sizeH(node.right));
+        }
+    }
 }
